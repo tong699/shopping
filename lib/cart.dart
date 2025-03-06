@@ -71,7 +71,7 @@ class CartItem extends StatelessWidget {
         Consumer<CartProvider>(builder: (context, cart, child) {
           return TextButton(
               onPressed: () {
-                Provider.of<CartProvider>(context).remove(item);
+                Provider.of<CartProvider>(context, listen: false).remove(item);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('$item removed from cart.')
                   ),
