@@ -1,7 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopping/cart_provider.dart';
+
+import 'item.dart';
+
+final List<Item> catalog = [
+  Item(1, 'Shoes'),
+  Item(2, 'Hats'),
+  Item(3, 'Shirts'),
+  Item(4, 'Tie'),
+  Item(5, 'Pants'),
+  Item(6, 'Jeans'),
+  Item(7, 'Shorts'),
+  Item(8, 'Underwear'),
+  Item(9, 'Jumpers'),
+  Item(10, 'Trousers'),
+  Item(11, 'Sleepwear'),
+  Item(12, 'Accessories'),
+];
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+      //Associate the CartProvider as a state manager to the MyApp
+      ChangeNotifierProvider(
+          create: (context) => CartProvider(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -120,6 +142,37 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class CartItem extends StatelessWidget {
+  final int index;
+
+  const CartItem({super.key, required this.index});
+
+  @override
+  Widget build(BuildContext context) {
+    //Retrieve an item from the catalog
+    var item = catalog[index];
+
+    return Row(
+      children: [
+        //Text(item.toString()) same as below
+        Text('$item'), //Call the toString method
+        const Expanded(child: SizedBox()),
+        Consumer<CartProvider>(builder: (context, cart, child) {
+          return TextButton(
+              onPressed: () {
+                cart.add(item);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('$item added to cart.')
+                  ),
+                );
+              },
+              child: const Text('Add'));
+        }),
+      ],
     );
   }
 }
